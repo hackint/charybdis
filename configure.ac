@@ -753,8 +753,16 @@ AC_HELP_STRING([--with-custom-version=NAME],
 		AC_MSG_RESULT([no])]
 )
 
+if git rev-parse --git-dir > /dev/null 2>&1; then
+	GITSHA=$(git rev-parse --short HEAD)
+else
+	GITSHA="unknown"
+fi
+
+
 AC_DEFINE_UNQUOTED(BRANDING_NAME, ["$BRANDING_NAME"], [Custom branding name.])
-AC_DEFINE_UNQUOTED(BRANDING_VERSION, ["$BRANDING_VERSION"], [Custom branding name.])
+AC_DEFINE_UNQUOTED(BRANDING_VERSION, ["${BRANDING_VERSION}-${GITSHA}"], [Custom branding name.])
+
 
 if test "x$BRANDING_NAME" != "x$PACKAGE_NAME"; then
 	AC_DEFINE(CUSTOM_BRANDING, 1, [Define if custom branding is enabled.])
