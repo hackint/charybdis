@@ -177,6 +177,35 @@ init_sys(void)
 	maxconnections = MAXCONNECTIONS;
 }
 
+void rehash_ulimit(void)
+{
+	#if defined(RLIMIT_NOFILE) && defined(HAVE_SYS_RESOURCE_H)
+		struct rlimit limit;
+
+		if(!getrlimit(RLIMIT_NOFILE, &limit) && limit.rlim_cur != maxconnections)
+		{
+			if(limit.rlim_cur <= MAX_BUFFER)
+			{
+				fprintf(stderr, "ERROR: Shell FD limits are too low.\n");
+				fprintf(stderr, "ERROR: charybdis reserves %d FDs, shell limits must be above this\n", MAX_BUFFER);
+				fprintf(stderr, "ERROR: keeping old limits\n");
+				return;
+			} else if(limit.rlim_cur < maxconnections)
+			{
+				fprintf(stderr, "ERROR: ulimit decreased\n");
+				fprintf(stderr, "ERROR: keeping old limits\n");
+				return;
+			}
+
+			maxconnections = limit.rlim_cur;
+
+			sendto_realops_snomask(SNO_GENERAL, L_ALL,
+					     "Setting maxconnections to %d", maxconnections);
+			return;
+		}
+	#endif /* RLIMIT_FD_MAX */
+}
+
 static int
 make_daemon(void)
 {
@@ -245,6 +274,7 @@ check_rehash(void *unused)
 	if(dorehash)
 	{
 		rehash(1);
+		rehash_ulimit();
 		dorehash = 0;
 	}
 

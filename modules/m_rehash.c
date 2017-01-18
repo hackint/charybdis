@@ -354,6 +354,7 @@ do_rehash(struct Client *source_p, const char *type)
 		ilog(L_MAIN, "REHASH From %s[%s]", get_oper_name(source_p),
 		     source_p->sockhost);
 		rehash(0);
+		rehash_ulimit();
 		remote_rehash_oper_p = NULL;
 	}
 }
