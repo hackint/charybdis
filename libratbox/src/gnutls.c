@@ -498,7 +498,7 @@ rb_init_ssl(void)
 
 int
 rb_setup_ssl_server(const char *const certfile, const char *keyfile,
-                    const char *const dhfile, const char *cipherlist)
+                    const char *const dhfile, const char *cipherlist, char *hostname)
 {
 	if(certfile == NULL)
 	{
