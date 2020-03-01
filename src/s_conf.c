@@ -829,7 +829,7 @@ set_default_conf(void)
 		alias_dict = irc_dictionary_create(strcasecmp);
 
 	if (!fakechannel_dict)
-		fakechannel_dict = irc_dictionary_create(strcasecmp);
+		fakechannel_dict = irc_dictionary_create(irccmp);
 }
 
 #undef YES
@@ -1582,7 +1582,7 @@ clear_out_old_conf(void)
 	}
 
 	/* remove any fakechannels */
-	if (alias_dict != NULL)
+	if (fakechannel_dict != NULL)
 	{
 		irc_dictionary_destroy(fakechannel_dict, free_fakechannel_cb, NULL);
 		fakechannel_dict = NULL;
