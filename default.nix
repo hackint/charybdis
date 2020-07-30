@@ -8,6 +8,10 @@ stdenv.mkDerivation {
 
   src = ./.;
 
+  patches = [
+    ./patches/bandb-remove-setenv.patch
+  ];
+
   configureFlags = [
     "--enable-epoll"
     "--enable-ipv6"
