@@ -1,6 +1,6 @@
 { stdenv, bash
 , flex, bison
-, openssl, gnutls }:
+, openssl, gnutls, zlib }:
 
 stdenv.mkDerivation {
   pname = "charybdis";
@@ -11,11 +11,12 @@ stdenv.mkDerivation {
   configureFlags = [
     "--enable-epoll"
     "--enable-ipv6"
+    "--with-zlib-path=${zlib.dev}/lib"
     "--enable-openssl=${openssl.dev}"
     "--with-program-prefix=charybdis-"
     "--sysconfdir=/etc/charybdis"
   ];
 
   nativeBuildInputs = [ bison flex ];
-  buildInputs = [ openssl gnutls ];
+  buildInputs = [ openssl gnutls zlib ];
 }
